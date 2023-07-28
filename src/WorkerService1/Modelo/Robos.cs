@@ -9,14 +9,19 @@ namespace WorkerService1.Modelo
     class Robo0
     {
         int numerador = 0;
-        public int Exceutar(Comandante c, Pedido pedido)
-        {            
-            pedido.Id = ++numerador;
-            Console.WriteLine($"Pedido Id: {pedido.Id}");
-            pedido.ExecutaCodigo();
-            Console.WriteLine($"Pedido Cod: {pedido.Codigo}");
-            return pedido.Id;
-        }        
+        public int Exceutar(Comandante c)
+        {
+            object _lock = new object();
+
+            lock (_lock)
+            {
+                c.Pedido.Id = ++numerador;
+                Console.WriteLine($"Pedido Id: {c.Pedido.Id}");
+                c.Pedido.ExecutaCodigo();
+                Console.WriteLine($"Pedido Cod: {c.Pedido.Codigo}");
+                return c.Pedido.Id;
+            }
+        }
     }
     class Robo1
     {
@@ -47,13 +52,27 @@ namespace WorkerService1.Modelo
     }
     class Robo4
     {
-        public bool Tarefa4(Comandante c, Pedido pedido)
+        public bool Tarefa4(Comandante c)
         {
             Console.WriteLine($"Tarefa Robo4...{DateTimeOffset.Now}");
-            Console.WriteLine($"Pedido Cod: {pedido.Codigo}");
+
             System.Threading.Thread.Sleep(1000);
-            c.ExecutarTarefas();
             return true;
+        }
+    }
+    class Robo5
+    {
+        public void Tarefa5(Comandante c)
+        {
+            Console.WriteLine($"Tarefa Robo5...{DateTimeOffset.Now}");
+            Console.WriteLine($"Pedido Cod: {c.Pedido.Codigo}");
+
+            System.Threading.Thread.Sleep(1000);
+
+            //if (5 > c.QtdExecusoes++)
+            //{
+            c.ExecutarTarefas();
+            // }
         }
     }
 }
