@@ -17,7 +17,7 @@ namespace WorkerService1
         {
             _logger.LogInformation("Inicio da Execução: {time}", DateTimeOffset.Now);
             await Task.Delay(500, stoppingToken);
-            _service.Executar();
+            _service.ExecutarAsync();
             _logger.LogInformation("Saiu da Execução: {time}", DateTimeOffset.Now);
         }
     }

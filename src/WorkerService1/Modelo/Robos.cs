@@ -8,27 +8,34 @@ namespace WorkerService1.Modelo
 {
     class Robo0
     {
-        int numerador = 0;
+        static int numerador = 0;
         public int Exceutar(Comandante c)
         {
-            object _lock = new object();
-
-            lock (_lock)
+            if (numerador < 20)
             {
-                c.Pedido.Id = ++numerador;
+                c.Pedido.Id = Numerador();
                 Console.WriteLine($"Pedido Id: {c.Pedido.Id}");
                 c.Pedido.ExecutaCodigo();
                 Console.WriteLine($"Pedido Cod: {c.Pedido.Codigo}");
                 return c.Pedido.Id;
             }
+            return 0;
+
+        }
+        private static int Numerador()
+        {
+            return ++numerador;
         }
     }
     class Robo1
     {
         public bool ExecutarTarefa(Comandante c)
-        {
-            Console.WriteLine($"Tarefa Robo1...{DateTimeOffset.Now}");
+        {            
+            
             System.Threading.Thread.Sleep(1000);
+            string msg = $"Tarefa Robo1...{DateTimeOffset.Now}";
+            Console.WriteLine(msg);
+            c.Pedido.MarcarExecucao(msg);            
             return true;
         }
     }
@@ -36,8 +43,11 @@ namespace WorkerService1.Modelo
     {
         public bool ExecutarOutraTarefa(Comandante c)
         {
-            Console.WriteLine($"Tarefa Robo2...{DateTimeOffset.Now}");
+            string msg = $"Tarefa Robo2...{DateTimeOffset.Now}";
             System.Threading.Thread.Sleep(1000);
+            Console.WriteLine(msg);
+            c.Pedido.MarcarExecucao(msg);
+
             return true;
         }
     }
@@ -45,8 +55,11 @@ namespace WorkerService1.Modelo
     {
         public bool ExecutaTarefa3(Comandante c)
         {
-            Console.WriteLine($"Tarefa Robo3...{DateTimeOffset.Now}");
+            string msg = $"Tarefa Robo3...{DateTimeOffset.Now}";
             System.Threading.Thread.Sleep(1000);
+            Console.WriteLine(msg);
+            c.Pedido.MarcarExecucao(msg);
+
             return true;
         }
     }
@@ -54,9 +67,11 @@ namespace WorkerService1.Modelo
     {
         public bool Tarefa4(Comandante c)
         {
-            Console.WriteLine($"Tarefa Robo4...{DateTimeOffset.Now}");
-
+            string msg = $"Tarefa Robo4...{DateTimeOffset.Now}";
             System.Threading.Thread.Sleep(1000);
+            Console.WriteLine(msg);
+            c.Pedido.MarcarExecucao(msg);
+
             return true;
         }
     }
@@ -64,15 +79,14 @@ namespace WorkerService1.Modelo
     {
         public void Tarefa5(Comandante c)
         {
-            Console.WriteLine($"Tarefa Robo5...{DateTimeOffset.Now}");
-            Console.WriteLine($"Pedido Cod: {c.Pedido.Codigo}");
-
+            string msg = $"Tarefa Robo5...{DateTimeOffset.Now}";
             System.Threading.Thread.Sleep(1000);
-
-            //if (5 > c.QtdExecusoes++)
-            //{
+            Console.WriteLine(msg);
+            c.Pedido.MarcarExecucao(msg);
+            Console.WriteLine($" INSET {c.Pedido.SequenciaExecucao}");
+                        
             c.ExecutarTarefas();
-            // }
+
         }
     }
 }

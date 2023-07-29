@@ -7,31 +7,33 @@ using WorkerService1.Modelo;
 
 namespace WorkerService1.Services
 {
-   public class ComandanteService:IComandanteService
+    public class ComandanteService : IComandanteService
     {
         private readonly ILogger<ComandanteService> _logger;
         public ComandanteService(ILogger<ComandanteService> logger)
         {
             _logger = logger;
         }
-        public void Executar()
+        public void ExecutarAsync()
         {
-            _logger.LogInformation("Inicio Execução Comandante");
-            Comandante c = new Comandante();
+            int numThreds = 8;
+            _logger.LogInformation("Inicio Execução Comandante");            
 
-            Thread t1 = new Thread(new ThreadStart(c.ExecutarTarefas));            
-            Thread t2 = new Thread(new ThreadStart(c.ExecutarTarefas));            
-            //Thread t3 = new Thread(new ThreadStart(c.ExecutarTarefas));            
-            t2.Start();
-            t1.Start();
-            //t3.Start();
+            Task[] myTasks = new Task[numThreds];
 
-            //c.ExecutarTarefas();
+            for (int i = 0; i < numThreds; i++)
+            {
+                Comandante c = new Comandante();
+                myTasks[i] = Task.Factory.StartNew(() => c.ExecutarTarefas());
+                System.Threading.Thread.Sleep(1000);
+            }
+
+            Task.WaitAll(myTasks);
         }
     }
 
-   public interface IComandanteService
+    public interface IComandanteService
     {
-        void Executar();
+        void ExecutarAsync();
     }
 }

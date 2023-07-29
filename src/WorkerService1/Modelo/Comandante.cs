@@ -8,6 +8,7 @@ namespace WorkerService1.Modelo
 {
     class Comandante
     {
+        readonly object _lock = new object();
         public Comandante()
         {
             Tarefa0 = new Robo0().Exceutar;
@@ -19,39 +20,37 @@ namespace WorkerService1.Modelo
         }
 
         protected Func<Comandante, int> Tarefa0 { get; }
-        protected Predicate<Comandante> Tarefa1 { get;  }
-        protected Predicate<Comandante> Tarefa2 { get;  }
+        protected Predicate<Comandante> Tarefa1 { get; }
+        protected Predicate<Comandante> Tarefa2 { get; }
         protected Predicate<Comandante> Tarefa3 { get; }
         protected Predicate<Comandante> Tarefa4 { get; }
         protected Action<Comandante> Tarefa5 { get; }
         public Pedido Pedido { get; private set; }
-        public int QtdExecusoes { get; set; } = 1;
 
         public void ExecutarTarefas()
-        {           
-            object _lock = new object();
+        {
+            
+            Pedido = new Pedido();//Poderia esta vindo do banco;
+            int id = Tarefa0.Invoke(this);
 
-            lock (_lock)
+            if (id > 0)
             {
-                Pedido = new Pedido();//Poderia esta vindo do banco;
-                int id = Tarefa0.Invoke(this);
+                var executouT1 = Tarefa1.Invoke(this);
+
+                var executouT2 = Tarefa2.Invoke(this);
+
+                var executouT3 = Tarefa3.Invoke(this);
+
+                var executouT4 = Tarefa4.Invoke(this);
+
+                Tarefa5.Invoke(this);
             }
 
-           
 
-            var executouT1 = Tarefa1.Invoke(this);
-
-            var executouT2 = Tarefa2.Invoke(this);
-
-            var executouT3 = Tarefa3.Invoke(this);
-
-            var executouT4 = Tarefa4.Invoke(this);
-
-            Tarefa5.Invoke(this);
         }
     }
 }
 
-        
-    
+
+
 
