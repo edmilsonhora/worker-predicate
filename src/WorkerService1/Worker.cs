@@ -15,10 +15,10 @@ namespace WorkerService1
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            _logger.LogInformation("Inicio da Execução: {time}", DateTimeOffset.Now);
             await Task.Delay(500, stoppingToken);
-            _service.Executar();                
-           
+            _service.ExecutarAsync();
+            _logger.LogInformation("Saiu da Execução: {time}", DateTimeOffset.Now);
         }
     }
 }
